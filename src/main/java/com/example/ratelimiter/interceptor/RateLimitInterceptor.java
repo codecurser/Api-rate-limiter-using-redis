@@ -18,6 +18,10 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true; // Skip rate limiting for CORS preflight
+        }
+
         String clientIp = formatIpAddress(request);
 
         if (!rateLimiterService.isAllowed(clientIp)) {
